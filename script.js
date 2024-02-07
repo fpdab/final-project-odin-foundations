@@ -154,5 +154,6 @@ function evaluateQueue() {
     res = res.join("");
   }
   screenNum.textContent = res;
-  operandFlag = true;
+  operandFlag = false;
+  numberFlag = true;
 }
