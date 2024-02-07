@@ -23,7 +23,10 @@ allButtons.forEach((button) => {
     "mousedown",
     () => (button.style.border = "1px solid")
   );
-  button.addEventListener("mouseup", () => (button.style.borderStyle = null));
+  button.addEventListener(
+    "mouseup",
+    () => (button.style.border = "1px solid rgb(32, 91, 95)")
+  );
 });
 
 clearButton.addEventListener("click", clearAll);
@@ -52,7 +55,7 @@ function calcDivide(a, b) {
   if (Number(b) !== 0) {
     return Number(a) / Number(b);
   } else {
-    return "error";
+    return "'/ ' by 0? nope";
   }
 }
 
@@ -66,9 +69,16 @@ function clearAll() {
 
 function insertNum(str) {
   if (operandFlag === true) screenNum.textContent = "";
-  screenNum.textContent += str;
-  operandFlag = false;
-  numberFlag = true;
+  if (
+    (str === "." && screenNum.textContent.includes(".") === true) ||
+    screenNum.textContent.length >= 12
+  ) {
+    return;
+  } else {
+    screenNum.textContent += str;
+    operandFlag = false;
+    numberFlag = true;
+  }
 }
 
 function insertOp(str) {
@@ -101,6 +111,7 @@ function getFinalQueue() {
 }
 
 function evaluateQueue() {
+  //calculating the result
   addToQueue();
   getFinalQueue();
   let res = finalQueue[0];
@@ -113,17 +124,24 @@ function evaluateQueue() {
         res = calcSubtract(res, finalQueue[2]);
         break;
       case "*":
-        res =
-          Math.round(calcMultiply(res, finalQueue[2]) * 10000000000) /
-          10000000000;
+        res = calcMultiply(res, finalQueue[2]);
         break;
       case "/":
-        res =
-          Math.round(calcDivide(res, finalQueue[2]) * 10000000000) /
-          10000000000;
+        res = calcDivide(res, finalQueue[2]);
         break;
     }
     finalQueue.splice(0, 2);
+  }
+  //converting result if it's too long to fit the screen
+  if (res.toString().length >= 12) {
+    if (res.toString().includes("e") === false) {
+      res = res.toExponential();
+    }
+    res = [...res.toString()];
+    res.splice(9, res.length - 13);
+    console.log(res);
+    res = res.join("");
+    console.log(res);
   }
   screenNum.textContent = res;
   operandFlag = true;
