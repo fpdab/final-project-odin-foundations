@@ -5,8 +5,10 @@ const screenNum = document.querySelector("#screen-number");
 const screenOp = document.querySelector("#screen-operand");
 const evaluateButton = document.querySelector("#eval-button");
 const clearButton = document.querySelector("#clear-button");
+const backspaceButton = document.querySelector("#backspace-button");
+
 const allButtons = document.querySelectorAll(
-  "#clear-button, #butNum, #butOp, #eval-button"
+  "#clear-button, #butNum, #butOp, #eval-button, #backspace-button"
 );
 
 //variables
@@ -40,6 +42,8 @@ butNums.forEach((button) => {
 butOps.forEach((button) => {
   button.addEventListener("click", () => insertOp(button.textContent));
 });
+
+backspaceButton.addEventListener("click", backSpace);
 
 //calc functions
 function calcAdd(a, b) {
@@ -92,6 +96,14 @@ function insertOp(str) {
   }
 }
 
+function backSpace() {
+  if (screenNum.textContent.length > 0) {
+    screenNum.textContent = screenNum.textContent.slice(0, -1);
+    operandFlag = false;
+    numberFlag = true;
+  }
+}
+
 function getNumFromScreen() {
   currentNumber = screenNum.textContent;
   return currentNumber;
@@ -139,9 +151,7 @@ function evaluateQueue() {
     }
     res = [...res.toString()];
     res.splice(9, res.length - 13);
-    console.log(res);
     res = res.join("");
-    console.log(res);
   }
   screenNum.textContent = res;
   operandFlag = true;
